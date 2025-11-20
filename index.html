@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat App (Single File)</title>
+
+    <style>
+        body {
+            background: #1e1e1e;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .chat-container {
+            width: 400px;
+            margin: 50px auto;
+            background: #2c2c2c;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #messages {
+            list-style: none;
+            height: 300px;
+            overflow-y: scroll;
+            padding: 0;
+            border: 1px solid #444;
+            margin-bottom: 15px;
+        }
+
+        #messages li {
+            padding: 8px;
+            margin: 5px;
+            background: #3e3e3e;
+            border-radius: 5px;
+        }
+
+        .input-box {
+            display: flex;
+        }
+
+        #msg {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #0078ff;
+            border: none;
+            padding: 10px 15px;
+            margin-left: 5px;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <h2>Chat App</h2>
+    
+    <ul id="messages"></ul>
+
+    <div class="input-box">
+        <input id="msg" autocomplete="off" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    function sendMessage() {
+        let msgInput = document.getElementById("msg");
+        let msg = msgInput.value;
+
+        if (msg.trim() !== "") {
+            socket.emit("chat message", msg); // <-- send to server
+        msgInput.value = "";
+        }
+    }
+    socket.on("chat message", function(msg) {
+    let li = document.createElement("li");
+    li.textContent = msg;
+    document.getElementById("messages").appendChild(li);
+});
+</script>
+
+</body>
+</html>
